@@ -1,0 +1,67 @@
+LANGGRAPH CHATBOT
+-------------------------
+
+User question -> classify -> generate response -> print bot response
+
+Nodes : classify , respond
+
+Optional library = a value can be either a certain type or None
+
+TypedDict = defines structure of dictionary (the graph state is a dict in the proj)
+
+networkx = used to create graphs for visualization
+
+StateGraph = from langgraph that lets us build a graph where each node is a function and the graph passes state bw those functions
+
+model.generate_content(prompt) sends the prompt to gemini
+
+Our langgraph state looked like :
+GraphState class that contains keys - question, classification, response 
+
+This dictionary is the memory/data being passed through your graph 
+
+The classify node: 
+------------------
+- decides what kind of input was given by the User
+- returns the old state plus new classification
+
+The respond node:
+------------------
+- creates the fina chatbot response
+- returns updated state with response in it 
+
+Langgraph workflow:
+--------------------
+builder = StateGraph(Graphstate) creates a langgraph graph builder
+then we set an entry point, add edges between nodes and a finish point and then finally buidr.compile()
+
+to create a visual diagram for this we use DiGraph
+
+-----------------------------
+
+state enters classify
+↓
+classify adds classification
+↓
+state enters respond
+↓
+respond adds response
+↓
+final result is returned
+
+------------------------------
+
+User enters message
+        ↓
+LangGraph receives state: {"question": user_input}
+        ↓
+classify node checks if it is greeting or search
+        ↓
+respond node either:
+    - gives hardcoded greeting
+    - or calls Gemini
+        ↓
+final bot response is printed
+
+----------------------------------------
+
